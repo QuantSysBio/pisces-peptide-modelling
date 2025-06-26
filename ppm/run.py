@@ -74,6 +74,7 @@ def run_ppm(pipeline=None, config_file=None):
         create_bg(config, args.pep_length)
 
     if pipeline in ('preprocess', 'all'):
+        print(f'Running preprocessing for model {config.model}')
         if config.model == 'cryptic':
             preprocess_cryptic(config)
         elif config.model == 'canonical':
@@ -82,6 +83,7 @@ def run_ppm(pipeline=None, config_file=None):
             process_spliced(config)
 
     if pipeline in ('train', 'train+', 'all'):
+        print(f'Running training for model {config.model}')
         if config.model in ('cryptic', 'canonical'):
             train_models(config)
         if config.model == 'spliced':

@@ -62,7 +62,7 @@ def kozak_similarity_score(sequence):
     max_score = np.sum(KOZAK_SIMILARITY_WEIGHTS.max(axis=1))
 
     score = score/max_score
-    # print(sequence, score)
+
     #Final scoring value: we take the maximum possible score 
     #calculated, and return our score divided by the maximum (to normalize from range 0 to 1) 
     return(score)

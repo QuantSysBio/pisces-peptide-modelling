@@ -125,8 +125,7 @@ def gather_negative_samples(stratum, is_cryptic, config, pep_len):
     pep_dfs = get_sampled_negative_peps(config, pep_len, is_cryptic, stratum)
     if not pep_dfs:
         return None
-    for pep_df in pep_dfs:
-        print(pep_df.columns)
+
     neg_pep_df = pl.concat(pep_dfs)
     neg_pep_df = neg_pep_df.with_columns(
         pl.col(f'{stratum}_Proteins').map_elements(
@@ -146,7 +145,7 @@ def create_features(peptide, prot_seq, rna_seq, iupred3_preds):
     pep_len = len(peptide)
     results = {}
 
-    results['peptide_hydrophobicity'] = pep_analysis.gravy()
+    results['peptideHydrophobicity'] = pep_analysis.gravy()
     results['protLength'] = len(prot_seq)
 
     for aa_group, aa_list in AMINO_ACID_GROUPS.items():

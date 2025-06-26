@@ -39,8 +39,7 @@ def analyse_spliced_model(config):
     unique_pep_df = pd.read_csv(
         f'{config.output_folder}/unique_peps_scored.csv'
     )
-    print(unique_pep_df['label'].value_counts())
-    print('ooookk')
+
     # print(ok)
     # plot_ubi_distro(unique_pep_df)
     plot_transcriptomics(unique_pep_df, config)
@@ -137,7 +136,6 @@ def plot_hotspots(unique_pep_df, config):
     )
     fig.update_xaxes(linecolor='white', title='canonical peptides from protein')
     fig.update_yaxes(title='mean impact on model')
-    fig.show()
 
     fig = go.Figure()
     print(unique_pep_df.columns)
@@ -168,7 +166,6 @@ def plot_hotspots(unique_pep_df, config):
     )
     fig.update_xaxes(linecolor='white', title='canonical peptides from protein')
     fig.update_yaxes(title='fraction of peptides')
-    fig.show()
     # pio.write_image(fig, f'{config.output_folder}/imgs/stratum_shap.svg')
 
     fig = make_subplots(rows=2, cols=2, subplot_titles=['SR1', 'SR2'], vertical_spacing=0.1)
@@ -217,7 +214,6 @@ def plot_hotspots(unique_pep_df, config):
     )
     # fig.update_xaxes(linecolor='white', title='canonical peptides from protein')
     # fig.update_yaxes(title='fraction of peptides')
-    fig.show()
 
 def plot_aucs(unique_pep_df, config):
 
@@ -291,7 +287,6 @@ def plot_shap_splice_site(unique_pep_df, config):
     )
     fig.update_xaxes(linecolor='white')
     fig.update_yaxes(title='impact on model', dtick=1)
-    fig.show()
     pio.write_image(fig, f'{config.output_folder}/imgs/spliced_site-shap.svg')
     get_splice_site_entropy(unique_pep_df, config)
 

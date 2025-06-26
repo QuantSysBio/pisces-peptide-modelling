@@ -61,13 +61,32 @@ def merge_orf_level_data(pep_df, config, stratum, label, id_columns):
         + STRATUM_SPECIFIC_FEATURES[stratum]
     )
 
-    return pep_df.select(final_columns)
+    pep_df = pep_df.select(final_columns)
+
+    if 'geneID' in pep_df.columns:
+        gene_df = pl.read_parquet(f'{config.antigen_folder}/gene.parquet')
+        if config.cell_line == 'K562':
+            pep_df = pep_df.join(
+                gene_df.select(['geneID', 'proteomics_K562']),
+                how='left',
+                on='geneID'
+            )
+            pep_df = pep_df.with_columns(pl.col('proteomics_K562').fill_null(0))
+        else:
+            pep_df = pep_df.join(
+                gene_df.select(['geneID', 'proteomics_B721']),
+                how='left',
+                on='geneID'
+            )
+            pep_df = pep_df.with_columns(pl.col('proteomics_B721').fill_null(0))
+        print(pep_df.filter(pl.col('proteinID').eq('ENSP00000462667.1')))
+    return pep_df
 
 def get_sampled_negative_peps(config, pep_len, is_cryptic, stratum):
     pep_dfs = []
     sample_df = pl.read_csv(f'{config.background_folder}/sample_ratios/ratio_{pep_len}.csv')
     sample_vals = dict(zip(sample_df['dataset'].to_list(), sample_df['fraction'].to_list()))
-    print(sample_vals)
+
     min_count = get_min_counts(config, pep_len, stratum, is_cryptic, sample_vals)
 
     for dataset in os.listdir(f'{config.background_folder}/remapped/{pep_len}'):
@@ -86,7 +105,6 @@ def get_sampled_negative_peps(config, pep_len, is_cryptic, stratum):
             else:
                 sample_goal = floor(sample_goal)
 
-            print(f'{dataset} : {min_count*sample_vals[dataset]} {sample_vals[dataset]} {pep_df.shape[0]}')
             if pep_df.shape[0] and pep_df.shape[0] > sample_goal:
                 pep_df = pep_df.sample(n=sample_goal, seed=1)
 
@@ -109,10 +127,9 @@ def get_min_counts(config, pep_len, stratum, is_cryptic, sample_vals):
                 print(f'Failure for {dataset}, length {pep_len}')
                 continue
             pep_count = pep_df.shape[0]/sample_vals[dataset]
-            print(f'{dataset} : {pep_count} {sample_vals[dataset]} {pep_df.shape[0]}')
             if pep_count and pep_count < sampled_min_count:
                 sampled_min_count = pep_count
-    print(sampled_min_count)
+
     if sampled_min_count == 1_000_000_000:
         return 0
     return sampled_min_count

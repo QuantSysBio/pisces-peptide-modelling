@@ -75,14 +75,14 @@ CRYPTIC_STRATA = [
 
 def plot_hydrophobicity(unique_pep_df, config):
     fig = make_subplots(rows=1, cols=2)
-    print(unique_pep_df['peptide_hydrophobicity'])
-    violin_traces = plot_distros(unique_pep_df, 'peptide_hydrophobicity', 'violin')
+    print(unique_pep_df['peptideHydrophobicity'])
+    violin_traces = plot_distros(unique_pep_df, 'peptideHydrophobicity', 'violin')
     print(len(violin_traces))
     for trace in violin_traces:
         print('\ttrace', type(trace))
         fig.add_trace(trace, row=1, col=1)
 
-    scatter_traces = plot_shap(unique_pep_df, 'peptide_hydrophobicity', 'scatter')
+    scatter_traces = plot_shap(unique_pep_df, 'peptideHydrophobicity', 'scatter')
     # print(scatter_traces)
     for trace in scatter_traces:
         fig.add_trace(trace, row=1, col=2)
@@ -93,7 +93,7 @@ def plot_hydrophobicity(unique_pep_df, config):
         'yaxis2': dict(range=[-8, 4], title_text='impact on model'),
         'xaxis2': dict(range=[-4, 4], title_text='peptide hydrophobicity')},
     )
-    unique_pep_df[['peptide', 'peptide_hydrophobicity']].to_csv('ok.csv', index=False)
+    unique_pep_df[['peptide', 'peptideHydrophobicity']].to_csv('ok.csv', index=False)
 
 def plot_fragment_length(pep_df, config):
     pep_df['fragmentLength'] = pep_df['start_dist'] + pep_df['stopDistances']
@@ -217,6 +217,19 @@ def plot_g_frac(unique_pep_df):
     fig = clean_plotly_fig(fig)
 
 
+def plot_proteomics(unique_pep_df, config):
+    groups = ['background', 'detected']
+    fig = go.Figure()
+    if config.cell_line == 'K562':
+        proteomics_column = 'proteomics_K562'
+    else:
+        proteomics_column = 'proteomics_B721'
+
+    traces = plot_distros(unique_pep_df, proteomics_column, 'bar', display_range=['x'])
+    for trace in traces:
+        fig.add_trace(trace)
+    # fig.show()
+
 def plot_kozak(unique_pep_df, config):
     groups = ['background', 'detected']
     fig = go.Figure()
@@ -275,6 +288,7 @@ def plot_kozak(unique_pep_df, config):
         },
         width=200,height=300
     )
+    # fig.show()
     # fig.add_hline(y=0, line_width=0.5, row=2, col=1)
     # fig.add_hline(y=0, line_width=0.5, row=2, col=2)
 
@@ -408,12 +422,12 @@ def analyse_model(config):
     plot_fragment_length(unique_pep_df, config)
     plot_transcriptomics(unique_pep_df, config)
 
-    plot_shap_termini(unique_pep_df, config)
     get_entropy_plots(unique_pep_df, config)
 
     model_stats = plot_aucs(unique_pep_df, config)
-
+    # plot_proteomics(unique_pep_df, config)
     if config.model == 'cryptic':
+        plot_shap_termini(unique_pep_df, config)
         plot_rna_fracs(unique_pep_df, config)
         plot_rel_pos(unique_pep_df)
         plot_kozak(unique_pep_df, config)
@@ -422,10 +436,10 @@ def analyse_model(config):
         # coverage_plot(unique_pep_df, config)
         create_cryptic_report(config, model_stats)
     else:
-        plot_hydrophobicity(unique_pep_df, config)
-        plot_rna_fracs(unique_pep_df, config, prefix='UTR_')
-        plot_utr(unique_pep_df)
-        # plot_ubi_distro(unique_pep_df)
+        # plot_hydrophobicity(unique_pep_df, config)
+        plot_rna_fracs(unique_pep_df, config)
+        # plot_utr(unique_pep_df)
+        plot_ubi_distro(unique_pep_df)
         # plot_go_distro(unique_pep_df)
 
         create_canonical_report(config, model_stats)

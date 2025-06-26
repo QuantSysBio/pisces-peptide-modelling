@@ -5,6 +5,7 @@ import pandas as pd
 import xgboost as xgb
 
 from ppm.constants import (
+    PROTEOMICS_FEATURES,
     TRAIN_FEATURES,
     TRANSCRIPT_FEATURES,
 )
@@ -17,7 +18,7 @@ CV_SIZE = 10
 def train_spliced_models(config):
     """ Functions to train models to distinguish peptides identified in IP. vs random.
     """
-    feature_set = TRAIN_FEATURES['spliced'] + TRANSCRIPT_FEATURES[config.cell_line]
+    feature_set = TRAIN_FEATURES['spliced'] + TRANSCRIPT_FEATURES[config.cell_line] + PROTEOMICS_FEATURES[config.cell_line]
     # total_pep_df = pd.read_parquet(f'background_analsis/trainingDatasets/{cell_line}/spliced.parquet')
     total_pep_dfs = []
     for pep_len in [9, 10, 11, 12]:

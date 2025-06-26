@@ -82,11 +82,10 @@ def create_pisces_db(config):
             all_dfs[name].append(id_df)
 
     combined_df = combine_all_strata(all_dfs)
-    print(combined_df.groupby('stratum')['peptide'].nunique())
 
     unique_df = combined_df.drop_duplicates(subset=['peptide'], keep=False)
     duplicated_df = combined_df[combined_df.duplicated(subset=['peptide'], keep=False)]
-    print(duplicated_df.dtypes)
+
     duplicated_df = duplicated_df.groupby('peptide', as_index=False).agg({
         'stratum': lambda x: 'contaminant' if 'contaminant' in x.values else 'error',
         'piscesDiscoverable': 'max',
@@ -130,7 +129,6 @@ def create_pisces_db(config):
                 )
 
     for count_column, list_columns in COUNT_COLUMNS.items():
-        print(count_column, list_columns)
         combined_df = combined_df.with_columns(
             pl.col(list_columns).list.len().alias(count_column)
         )
@@ -174,9 +172,9 @@ def get_identified_peptides(project_path):
     """
     remapped_df = pd.read_csv(f'{project_path}/filtered_mapped.csv')
     remapped_df = remapped_df[
-        (remapped_df['adjustedProbability'] > 0.85) &
-        (remapped_df['qValue_PSM'] < 0.05) &
-        (remapped_df['qValue_peptide'] < 0.05)
+        (remapped_df['adjustedProbability'] > 0.85) #&
+        # (remapped_df['qValue_PSM'] < 0.05) &
+        # (remapped_df['qValue_peptide'] < 0.05)
     ]
     remapped_df = remapped_df.sort_values(by='adjustedProbability', ascending=False)
     remapped_df = remapped_df.drop_duplicates(subset=['peptide'])

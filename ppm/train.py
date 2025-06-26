@@ -6,6 +6,7 @@ from sklearn.model_selection import RandomizedSearchCV, LeaveOneGroupOut
 import xgboost as xgb
 
 from ppm.constants import (
+    PROTEOMICS_FEATURES,
     TRAIN_FEATURES,
     CRYPTIC_STRATA,
     TRANSCRIPT_FEATURES,
@@ -17,10 +18,10 @@ def train_models(config):
     """ Functions to train models to distinguish peptides identified in IP. vs random.
     """
     if config.model == 'cryptic':
-        feature_set = TRAIN_FEATURES['cryptic'] + TRANSCRIPT_FEATURES[config.cell_line]
+        feature_set = TRAIN_FEATURES['cryptic'] + TRANSCRIPT_FEATURES[config.cell_line] + PROTEOMICS_FEATURES[config.cell_line]
         strata = CRYPTIC_STRATA
     else:
-        feature_set = TRAIN_FEATURES['canonical'] + TRANSCRIPT_FEATURES[config.cell_line]
+        feature_set = TRAIN_FEATURES['canonical'] + TRANSCRIPT_FEATURES[config.cell_line] + PROTEOMICS_FEATURES[config.cell_line]
         strata = ['canonical']
 
     strat_dfs = []

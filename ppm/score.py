@@ -8,6 +8,7 @@ import xgboost as xgb
 
 from ppm.constants import (
     CRYPTIC_STRATA,
+    PROTEOMICS_FEATURES,
     TRAIN_FEATURES,
     N_CV_GROUPS,
     SPLICED_FEATURES,
@@ -30,7 +31,7 @@ def score_multi_mappers(config):
 
 def score_cryptic_multi_mappers(config):
     strat_dfs = []
-    feature_set = TRAIN_FEATURES[config.model] + TRANSCRIPT_FEATURES[config.cell_line] 
+    feature_set = TRAIN_FEATURES[config.model] + TRANSCRIPT_FEATURES[config.cell_line] + PROTEOMICS_FEATURES[config.cell_line]
 
     for stratum in CRYPTIC_STRATA:
         strat_dfs.append(pd.concat([
@@ -44,7 +45,6 @@ def score_cryptic_multi_mappers(config):
     for model_idx in range(N_CV_GROUPS):
         clf = xgb.XGBClassifier()
         clf.load_model(f'{config.output_folder}/models/clf_combined_{model_idx}.json')
-        print(feature_set)
         total_pep_df[f'score_{model_idx}'] = clf.predict_proba(total_pep_df[feature_set])[:,1]
 
     total_pep_df['meanScore'] = total_pep_df[
@@ -57,7 +57,7 @@ def score_cryptic_multi_mappers(config):
     unique_pep_df.to_csv(f'{config.output_folder}/mm_scored.csv', index=False)
 
 def score_spliced_multi_mappers(config):
-    feature_set = SPLICED_FEATURES + TRANSCRIPT_FEATURES[config.cell_line]
+    feature_set = SPLICED_FEATURES + TRANSCRIPT_FEATURES[config.cell_line] + PROTEOMICS_FEATURES[config.cell_line]
 
     total_pep_dfs = []
     for pep_len in range(7,16):

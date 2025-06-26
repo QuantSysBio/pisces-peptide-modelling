@@ -34,7 +34,7 @@ def get_can_distro(config, pep_length):
         datasets = [x for x in datasets if x.startswith('K562')]
     else:
         datasets = [x for x in datasets if not x.startswith('K562')]
-    print(datasets)
+
     for dataset in datasets:
         remapped_df = pep_df.filter(pl.col('datasets').list.contains(dataset))
         can_df = remapped_df.filter(
@@ -138,8 +138,6 @@ def remap_random(config, pep_length):
         unique_pep_df = extract_details(unique_pep_df, [], output_folder, 'canonical')
         unique_pep_df = extract_spliced_details(unique_pep_df, output_folder)
 
-        print(unique_pep_df)
-
         # Map to cryptic strata and extract details
         unique_pep_df, _ = process_fasta_folder(
             unique_pep_df,
@@ -148,6 +146,4 @@ def remap_random(config, pep_length):
             output_folder,
             'cryptic',
         )
-        print(unique_pep_df)
-        print(f'writing to {output_folder}/peptides.csv')
         unique_pep_df.write_csv(f'{output_folder}/peptides.csv')

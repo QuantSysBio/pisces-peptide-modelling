@@ -22,7 +22,6 @@ def plot_ubi_distro(pep_df):
     for trace in traces:
         fig.add_trace(trace)
     fig = clean_plotly_fig(fig)
-    fig.show()
 
 def plot_go_distro(pep_df):
     fig = make_subplots(cols=3, rows=2)
@@ -40,7 +39,6 @@ def plot_go_distro(pep_df):
         for trace in traces:
             fig.add_trace(trace, row=2, col=1+idx)
     fig = clean_plotly_fig(fig)
-    fig.show()
 
 def plot_feature_importances(config):
     import_df = pd.read_csv(f'{config.output_folder}/models/importances.csv')
@@ -251,7 +249,6 @@ def plot_transcriptomics(unique_pep_df, config):
         width=300,height=300,bargap=0,
     )
     fig.update_xaxes(linecolor='white')
-    fig.show()
     pio.write_image(fig, f'{config.output_folder}/imgs/transcriptomic_distro.svg')
 
 

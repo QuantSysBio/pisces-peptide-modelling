@@ -38,21 +38,17 @@ BGD_COLOURS = ['wheat','#157F91']
 TRAIN_FEATURES = {
     'canonical': [
         'ubiCounts', 'acetylCounts',
-        # 'UTR_length', 'UTR_A_frac', 'UTR_C_frac', 'UTR_G_frac', 'UTR_U_frac',
         'A_frac', 'C_frac', 'G_frac', 'U_frac',
-
-        'protLength', 'relativePosition', 'start_dist', 'proteinHydrophobicity',
-
-        # 'peptide_hydrophobicity',
-
+        'protLength', 'relativePosition', 'start_dist',
+        'proteinHydrophobicity', 'peptideHydrophobicity',
         'C_term_acidic', 'C_term_basic', 'C_term_hydrophobic', 'C_term_polar', 'C_term_special-case',
-
-        'C_term_neg_1_acidic', 'C_term_neg_1_basic', 'C_term_neg_1_end', 'C_term_neg_1_hydrophobic', 'C_term_neg_1_polar', 'C_term_neg_1_special-case',
+        'C_term_neg_1_acidic', 'C_term_neg_1_basic', 'C_term_neg_1_end',
+        'C_term_neg_1_hydrophobic', 'C_term_neg_1_polar', 'C_term_neg_1_special-case',
     ],
     'cryptic': [
         'stratum',
     
-        'protLength', 'relativePosition', 'proteinHydrophobicity', 'peptide_hydrophobicity',
+        'protLength', 'relativePosition', 'proteinHydrophobicity', 'peptideHydrophobicity',
     
         'C_term_basic', 'C_term_special-case', 'C_term_hydrophobic', 'C_term_acidic', 'C_term_polar',
         
@@ -116,6 +112,10 @@ TRANSCRIPT_FEATURES = {
     'K562': ['tr_TPM_K562_bulk', 'tr_TPM_K562_free', 'tr_TPM_K562_S80', 'tr_TPM_K562_poly'],
     'B721.221': ['tr_TPM_721'],
 }
+PROTEOMICS_FEATURES = {
+    'K562': ['proteomics_K562'],
+    'B721.221': ['proteomics_B721'],
+}
 ID_COLUMNS = ['peptide', 'proteinID']
 NUCLEOTIDE_COLOUR_SCHEME = {
     'A': '#FFAA33',
@@ -126,15 +126,16 @@ NUCLEOTIDE_COLOUR_SCHEME = {
 
 STRATUM_SPECIFIC_FEATURES = {
     'canonical': [
+        'geneID',
         'ubiCounts', 'acetylCounts',
-        'UTR_length', 'UTR_A_frac', 'UTR_C_frac', 'UTR_G_frac', 'UTR_U_frac',
+        # 'UTR_A_frac', 'UTR_C_frac', 'UTR_G_frac', 'UTR_U_frac',
     ],
-    'spliced': ['nCanonicalPeptides', 'canonicalPeptides', 'ubiCounts', 'acetylCounts', 'Cytoplasmic translation', 'RNA processing', 'Nucleic acid metabolic process'],
-    'fiveUTR': [],
-    'threeUTR': [],
-    'CDS_frameshift': ['codingStrand', 'mismatches'],
+    'spliced': ['geneID', 'nCanonicalPeptides', 'canonicalPeptides', 'ubiCounts', 'acetylCounts', 'Cytoplasmic translation', 'RNA processing', 'Nucleic acid metabolic process'],
+    'fiveUTR': ['geneID',],
+    'threeUTR': ['geneID',],
+    'CDS_frameshift': ['geneID', 'codingStrand', 'mismatches'],
     'lncRNA': [],
-    'intronic': [],
+    'intronic': ['geneID'],
     'intergenic': ['deNovoAssembly'],
 }
 
