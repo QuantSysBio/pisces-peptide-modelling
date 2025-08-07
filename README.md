@@ -26,7 +26,7 @@ conda activate pisces
 3) You will then need to install the PISCES package (this also installs inSPIRE and PEPSeek):
 
 ```
-https://github.com/QuantSysBio/pisces-peptide-modelling.git
+git clone https://github.com/QuantSysBio/pisces-peptide-modelling.git
 cd pisces-peptide-modelling
 python setup.py install
 ```
